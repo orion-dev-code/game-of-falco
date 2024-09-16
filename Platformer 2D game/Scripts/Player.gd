@@ -15,25 +15,54 @@ onready var trap_sound = preload("res://asset/Son/Sound/explosion.wav")
 
 
 var start_position = Vector2()
-var is_dead = false
 var is_attacking = false
-
+var minute  = false
 func _ready():
+	Globale.pause_menu = false
+	$CollisionShape2D.disabled = false
 	$Timer.start()
 	start_position = position
 
 	var traps = get_tree().get_nodes_in_group("traps")
 	for trap in traps:
 		trap.connect("player_touched", self, "_on_player_touched")
-
-	# Connecter le signal d'animation terminé
-	#anim.connect("animation_finished", self, "_on_Attack_animation_finished")
+	pass
 
 func _physics_process(delta):
+	if Globale.pause_menu ==true:
+		Engine.time_scale =0
+		$Camera2D/pause_menu.show()
+	else:
+		Engine.time_scale = 1
+		$Camera2D/pause_menu.hide()
+	Globale.player_pos = global_position
+	if Globale.heart == 3:
+		$Camera2D/heart.region_rect = Rect2(14.2,31.2,71,32)
+	if Globale.heart == 2:
+		$Camera2D/heart.region_rect = Rect2(14.2,31.2,47,32)
+	if Globale.heart == 1:
+		$Camera2D/heart.region_rect = Rect2(14.2,31.2,25,32)
+	if Globale.heart ==0:
+		get_tree().reload_current_scene()
+		$Camera2D/heart.region_rect = Rect2(14.2,31.2,0,32)
+	if Globale.die == true:
+		die()
+	
+	#timer
+	if Globale.second == 60:
+		Globale.minute += 1
+		Globale.second = 0
+		minute = true
+	if minute ==true :
+			$Camera2D/Label.text = str(Globale.minute)+':'+str(Globale.second)
+	if minute == false:
+		$Camera2D/Label.text = str(Globale.second)
+
+
 	$Camera2D/coins/coins_number.text = str(Globale.coins)
-	$Camera2D/Label.text = str(Globale.timer)
-	#move
-	if is_dead:
+
+	if Globale.die == true:
+		
 		return
 
 	if is_attacking:
@@ -54,10 +83,12 @@ func _physics_process(delta):
 			velocity.y -= jump
 			anim.play("jump")
 	else:
+		velocity.y += gravity * delta
 		if movement_x == 0:
 			velocity.x = lerp(velocity.x, 0, resistance)
 
-	velocity.y += gravity * delta
+
+
 	velocity = move_and_slide(velocity, Vector2.UP)
 
 	if Input.is_action_just_pressed("attack"):
@@ -68,25 +99,44 @@ func _on_Attack_animation_finished(anim_name):
 	if anim_name == "attack":
 		is_attacking = false
 
-func _on_player_touched():
-	if not is_dead:
-		is_dead = true
-		anim.play("death")
-		# Jouer le son du piège ici
-		$AudioServer.play(trap_sound)
-		yield(anim, "animation_finished")
-		position = start_position
-		velocity = Vector2.ZERO
-		is_dead = false
 
 
 
-func _on_Area2D_body_entered(body):
-	if body.name == "Player":
-		get_tree().reload_current_scene()
-	pass # Replace with function body.
+
+
 
 
 func _on_Timer_timeout():
-	Globale.timer += 1
+	Globale.second += 1
+	pass # Replace with function body.
+
+func die():
+
+	$AnimationPlayer.play("Death")
+
+	yield(get_tree().create_timer(0.65),"timeout")
+	if Globale.heart ==1:
+		get_tree().reload_current_scene()
+
+	global_position = start_position
+	$Timer2.start()
+	Globale.die = false
+	
+	pass
+
+
+func _on_Timer2_timeout():
+	Globale.heart -=1
+	pass # Replace with function body.
+
+
+func _on_Area2D_body_entered(body):
+	if body.is_in_group("skeleton"):
+		Globale.skel_damage = true
+
+	pass # Replace with function body.
+
+
+func _on_Button_pressed():
+	Globale.pause_menu = true
 	pass # Replace with function body.

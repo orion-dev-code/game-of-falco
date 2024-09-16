@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/slime_green.png-2e48b4c28ed1b97c451748ca43305f24.stex"
+path="res://.import/Skeleton_01_White_Attack2.png-6230f7589e7fbf239a188fdc60104033.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://asset/ennemi/slime/green_slime/slime_green.png"
-dest_files=[ "res://.import/slime_green.png-2e48b4c28ed1b97c451748ca43305f24.stex" ]
+source_file="res://asset/ennemi/Skeletons_Free_Pack/Skeleton_Sword/Skeleton_White/Skeleton_With_VFX/Skeleton_01_White_Attack2.png"
+dest_files=[ "res://.import/Skeleton_01_White_Attack2.png-6230f7589e7fbf239a188fdc60104033.stex" ]
 
 [params]
 

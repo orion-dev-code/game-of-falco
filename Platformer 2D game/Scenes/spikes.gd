@@ -25,3 +25,9 @@ func move():
 func _on_Timer_timeout():
 	move()
 	pass # Replace with function body.
+
+
+func _on_spikes_body_entered(body):
+	if body.is_in_group("player"):
+		Globale.die = true
+	pass # Replace with function body.

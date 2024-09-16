@@ -81,4 +81,5 @@ anims/idle_spike = SubResource( 2 )
 
 [node name="Timer" type="Timer" parent="."]
 
+[connection signal="body_entered" from="." to="." method="_on_spikes_body_entered"]
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

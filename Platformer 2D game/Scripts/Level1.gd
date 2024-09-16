@@ -1,7 +1,15 @@
 extends Node2D
 
-onready var anime = $Trap1/AnimationPlayer
 
-func _on_Area2D_body_entered(body):
-	if body.name == "Player":
-		get_tree().reload_current_scene()
+
+func _ready():
+	Globale.heart = 3
+	pass
+
+
+
+
+func _on_zone_body_entered(body):
+	if body.is_in_group("player"):
+		Globale.die = true
+	pass # Replace with function body.
